@@ -7,17 +7,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.example.storyapp.R
 import com.example.storyapp.databinding.FragmentRegisterBinding
+import com.example.storyapp.repository.NetworkResult
+import com.example.storyapp.util.isEmailValid
 import com.example.storyapp.viewmodel.AuthViewModel
+import com.example.storyapp.viewmodel.ViewModelFactory
 
 
 class RegisterFragment : Fragment() {
 
     private lateinit var viewBinding : FragmentRegisterBinding
-    private val sharedViewModel : AuthViewModel by activityViewModels()
+    private val sharedViewModel : AuthViewModel by activityViewModels{
+        ViewModelFactory.getInstance(requireContext())
+    }
 
 
     override fun onCreateView(
@@ -48,11 +54,42 @@ class RegisterFragment : Fragment() {
 
     private fun setupView(){
         viewBinding.btnRegister.setOnClickListener {
-            // Register process here, if succeeded navigate to login fragment
+            val name = viewBinding.etName.text.toString().trim()
+            val email = viewBinding.etEmail.text.toString().trim()
+            val password = viewBinding.etPassword.text.toString().trim()
+
+            if(name.isEmpty()){
+                viewBinding.etName.requestFocus()
+            }else if(!isEmailValid(email)){
+                viewBinding.etEmail.requestFocus()
+            }else if(password.length < 8){
+                viewBinding.etPassword.requestFocus()
+            }else{
+                sharedViewModel.register(name, email, password).observe(viewLifecycleOwner){networkResult ->
+                    when(networkResult){
+                        is NetworkResult.Loading -> showLoading(true)
+                        is NetworkResult.Error -> {
+                            showLoading(false)
+                            Toast.makeText(requireActivity(), networkResult.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is NetworkResult.Success -> {
+                            showLoading(false)
+                            if(!networkResult.data.error){
+                                requireActivity().onBackPressed()
+                            }
+                        }
+                    }
+                }
+            }
+
         }
         viewBinding.tvLogin.setOnClickListener {
             requireActivity().onBackPressed()
         }
+    }
+
+    private fun showLoading(isLoading : Boolean){
+        viewBinding.pbLoading.visibility = if(isLoading) View.VISIBLE else View.GONE
     }
 
 }

@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".view.fragment.RegisterFragment">
 
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/et_name"
         android:layout_width="match_parent"
@@ -17,6 +28,7 @@
         android:inputType="text"
         android:minHeight="48dp"
         android:alpha="0"
+        tools:alpha="1"
         app:layout_constraintBottom_toTopOf="@+id/et_email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -34,6 +46,7 @@
         android:inputType="textEmailAddress"
         android:minHeight="48dp"
         android:alpha="0"
+        tools:alpha="1"
         android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toTopOf="@+id/et_password"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,6 +64,7 @@
         android:inputType="textPassword"
         android:minHeight="48dp"
         android:alpha="0"
+        tools:alpha="1"
         android:layout_marginBottom="50dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_register"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,6 +80,7 @@
         android:text="@string/sign_up_text"
         android:textAllCaps="false"
         android:alpha="0"
+        tools:alpha="1"
         app:layout_constraintBottom_toTopOf="@+id/linearLayoutCompat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -80,6 +95,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:alpha="0"
+        tools:alpha="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

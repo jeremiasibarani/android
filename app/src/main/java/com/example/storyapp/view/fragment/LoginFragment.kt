@@ -17,11 +17,14 @@ import com.example.storyapp.repository.NetworkResult
 import com.example.storyapp.util.isEmailValid
 import com.example.storyapp.view.activity.StoryActivity
 import com.example.storyapp.viewmodel.AuthViewModel
+import com.example.storyapp.viewmodel.ViewModelFactory
 
 class LoginFragment : Fragment() {
 
     private lateinit var viewBinding : FragmentLoginBinding
-    private val sharedViewModel : AuthViewModel by activityViewModels()
+    private val sharedViewModel : AuthViewModel by activityViewModels{
+        ViewModelFactory.getInstance(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +54,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupView(){
+
         viewBinding.tvRegister.setOnClickListener {
             viewBinding.root.findNavController()
                 .navigate(R.id.registerFragment)
@@ -73,10 +77,12 @@ class LoginFragment : Fragment() {
                         }
                         is NetworkResult.Success -> {
                             showLoading(false)
-                            val intent = Intent(requireActivity(), StoryActivity::class.java)
-                            requireActivity().apply {
-                                startActivity(intent)
-                                finish()
+                            if(!networkResult.data.error){
+                                val intent = Intent(requireActivity(), StoryActivity::class.java)
+                                requireActivity().apply {
+                                    startActivity(intent)
+                                    finish()
+                                }
                             }
                         }
                     }
@@ -88,4 +94,6 @@ class LoginFragment : Fragment() {
     private fun showLoading(isLoading : Boolean){
         viewBinding.pbLoading.visibility = if(isLoading) View.VISIBLE else View.GONE
     }
+
+
 }

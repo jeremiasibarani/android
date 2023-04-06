@@ -9,9 +9,6 @@ import com.example.storyapp.viewmodel.ViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel : AuthViewModel by viewModels {
-        ViewModelFactory.getInstance(applicationContext)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
