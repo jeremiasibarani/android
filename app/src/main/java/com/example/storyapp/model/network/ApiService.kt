@@ -1,6 +1,7 @@
 package com.example.storyapp.model.network
 
 import com.example.storyapp.BuildConfig
+import com.example.storyapp.util.Constants
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
@@ -8,12 +9,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthApiService {
 
     @FormUrlEncoded
-    @POST("register")
+    @POST(Constants.REGISTER_PATH)
     suspend fun register(
         @Field("name") name : String,
         @Field("email") email : String,
@@ -21,7 +24,7 @@ interface AuthApiService {
     ) : Response<RegisterResponse>
 
     @FormUrlEncoded
-    @POST("login")
+    @POST(Constants.LOGIN_PATH)
     suspend fun login(
         @Field("email") email : String,
         @Field("password") password: String
@@ -29,23 +32,32 @@ interface AuthApiService {
 
 }
 
+interface StoryApiService{
+
+    @GET(Constants.STORIES_PATH)
+    suspend fun getStories(@Header("Authorization") token : String) : Response<GetAllStoriesResponse>
+
+}
+
 class ApiConfig{
     companion object{
+        private val loggingInterceptor = HttpLoggingInterceptor()
+            .setLevel(HttpLoggingInterceptor.Level.BODY)
+
+        private val client = OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .build()
+
+        private val retrofit = Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_API)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build()
         fun getAuthApiService() : AuthApiService{
-            val logginInterceptor = HttpLoggingInterceptor()
-                .setLevel(HttpLoggingInterceptor.Level.BODY)
-
-            val client = OkHttpClient.Builder()
-                .addInterceptor(logginInterceptor)
-                .build()
-
-            val retrofit = Retrofit.Builder()
-                .baseUrl(BuildConfig.BASE_API)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build()
-
             return retrofit.create(AuthApiService::class.java)
+        }
+        fun getStoryApiService() : StoryApiService{
+            return retrofit.create(StoryApiService::class.java)
         }
     }
 }

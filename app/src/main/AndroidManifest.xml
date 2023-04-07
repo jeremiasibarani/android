@@ -18,7 +18,8 @@
             android:exported="false"/>
         <activity
             android:name=".view.activity.StoryActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/story_activity_label"/>
         <activity
             android:name=".view.activity.SplashScreenActivity"
             android:exported="true"

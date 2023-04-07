@@ -5,16 +5,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.di.Injector
 import com.example.storyapp.model.network.AuthApiService
+import com.example.storyapp.model.network.StoryApiService
 import com.example.storyapp.repository.AuthRepository
+import com.example.storyapp.repository.StoryRepository
 
 @Suppress("UNCHECKED_CAST")
 class ViewModelFactory private constructor(
-    private val authRepository: AuthRepository? = null
+    private val authRepository: AuthRepository? = null,
+    private val storyRepository: StoryRepository? = null
 ) : ViewModelProvider.NewInstanceFactory(){
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(AuthViewModel::class.java)){
             return AuthViewModel(authRepository as AuthRepository) as T
+        }else if(modelClass.isAssignableFrom(StoryViewModel::class.java)){
+            return StoryViewModel(storyRepository as StoryRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
@@ -25,7 +30,10 @@ class ViewModelFactory private constructor(
         fun getInstance(
             context : Context
         ) : ViewModelFactory = instance ?: synchronized(this){
-                instance ?: ViewModelFactory(Injector.provideAuthRepository(context))
+                instance ?: ViewModelFactory(
+                    authRepository = Injector.provideAuthRepository(context),
+                    storyRepository = Injector.provideStoryRepository(context)
+                )
         }.also {
             instance = it
         }

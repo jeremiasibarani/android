@@ -7,6 +7,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.storyapp.datastore.AuthPreferences
 import com.example.storyapp.model.network.ApiConfig
 import com.example.storyapp.repository.AuthRepository
+import com.example.storyapp.repository.StoryRepository
 
 val Context.dataStore : DataStore<Preferences> by preferencesDataStore(name = "authentication")
 
@@ -16,5 +17,11 @@ object Injector {
         val authApiService = ApiConfig.getAuthApiService()
         val authPreferences = AuthPreferences(context.dataStore)
         return AuthRepository(authApiService, authPreferences)
+    }
+
+    fun provideStoryRepository(context: Context) : StoryRepository{
+        val storyApiService = ApiConfig.getStoryApiService()
+        val authPreferences = AuthPreferences(context.dataStore)
+        return StoryRepository(storyApiService, authPreferences)
     }
 }

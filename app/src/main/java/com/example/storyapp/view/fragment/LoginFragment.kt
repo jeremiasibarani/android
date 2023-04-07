@@ -20,7 +20,6 @@ import com.example.storyapp.viewmodel.AuthViewModel
 import com.example.storyapp.viewmodel.ViewModelFactory
 
 class LoginFragment : Fragment() {
-
     private lateinit var viewBinding : FragmentLoginBinding
     private val sharedViewModel : AuthViewModel by activityViewModels{
         ViewModelFactory.getInstance(requireContext())
