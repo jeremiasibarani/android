@@ -9,10 +9,20 @@
         android:id="@+id/storiesFragment"
         android:name="com.example.storyapp.view.fragment.StoriesFragment"
         android:label="fragment_stories"
-        tools:layout="@layout/fragment_stories" />
+        tools:layout="@layout/fragment_stories" >
+        <action
+            android:id="@+id/action_storiesFragment_to_addStoryFragment"
+            app:destination="@id/addStoryFragment" />
+    </fragment>
     <fragment
         android:id="@+id/addStoryFragment"
         android:name="com.example.storyapp.view.fragment.AddStoryFragment"
         android:label="fragment_add_story"
-        tools:layout="@layout/fragment_add_story" />
+        tools:layout="@layout/fragment_add_story" >
+        <action
+            android:id="@+id/action_addStoryFragment_to_storiesFragment"
+            app:destination="@id/storiesFragment"
+            app:popUpTo="@id/storiesFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

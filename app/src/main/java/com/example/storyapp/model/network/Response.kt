@@ -32,3 +32,8 @@ data class Story(
     val lat : Float,
     val long : Float
 )
+
+data class AddStoryResponse(
+    val error : Boolean,
+    val message : String
+)

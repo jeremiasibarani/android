@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
 import com.example.storyapp.databinding.FragmentStoriesBinding
@@ -45,6 +46,11 @@ class StoriesFragment : Fragment() {
                     bindDataToStoriesRecyclerView(networkResult.data.listStory)
                 }
             }
+        }
+
+        viewBinding.fabAddPost.setOnClickListener {
+            viewBinding.root.findNavController()
+                .navigate(R.id.action_storiesFragment_to_addStoryFragment)
         }
 
         return viewBinding.root
