@@ -12,6 +12,7 @@
         android:layout_height="250dp"
         app:cardCornerRadius="10pt"
         app:cardElevation="0dp"
+        android:contentDescription="@string/card_view_avatar_content_description"
         app:layout_constraintBottom_toTopOf="@+id/ll_upload_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -24,7 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/placeholder"/>
+            android:src="@drawable/placeholder"
+            android:contentDescription="@string/image_avatar_content_description"/>
     </androidx.cardview.widget.CardView>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -45,14 +47,16 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
             android:text="@string/upload_from_camera"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:contentDescription="@string/btn_camera_upload_content_description"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_upload_from_gallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/upload_from_gallery"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:contentDescription="@string/btn_gallery_upload_content_description"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -63,12 +67,13 @@
         android:layout_marginHorizontal="25dp"
         android:background="@drawable/edit_text_bg"
         android:gravity="start"
+        android:hint="@string/et_description_post_content_description"
         app:layout_constraintBottom_toTopOf="@+id/btn_post_story"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_upload_buttons"
-        tools:text="@tools:sample/lorem/random"/>
+        />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_post_story"
@@ -76,6 +81,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25dp"
         android:text="@string/upload_button"
+        android:textAllCaps="false"
+        android:contentDescription="@string/btn_upload_content_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

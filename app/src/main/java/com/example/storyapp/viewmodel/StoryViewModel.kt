@@ -8,7 +8,7 @@ import java.io.File
 class StoryViewModel(private val storyRepository: StoryRepository) : ViewModel() {
 
     fun getStories() = storyRepository.getStories()
-
     fun postStory(description : String, file : File) = storyRepository.addStory(description, file)
+    fun getDetailStory(storyId : String) = storyRepository.getDetailStory(storyId)
 
 }

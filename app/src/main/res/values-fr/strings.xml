@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StoryApp</string>
+    <string name="story_activity_label">Story</string>
+    <string name="less_than_8_char_password_error">Le mot de passe doit comporter au moins 8 caractères</string>
+    <string name="email_hint">Votre email</string>
+    <string name="password_hint">Créer un mot de passe</string>
+    <string name="name_hint">Votre nom</string>
+    <string name="register_text_suggestion">Vous n\'avez pas de compte?</string>
+    <string name="sign_up_text">Registre</string>
+    <string name="login_text_suggestion">Vous avez déjà un compte ?</string>
+    <string name="sign_in_text">Connexion</string>
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="upload_from_camera">Caméra</string>
+    <string name="upload_from_gallery">Galerie</string>
+    <string name="upload_button">Télécharger</string>
+    <string name="camera_permission_denied">La caméra ne peut être mise en marche sans autorisation</string>
+
+    <string name="card_view_avatar_content_description">Cadre de la photo de l\'utilisateur</string>
+    <string name="image_avatar_content_description">Photo de l\'utilisateur</string>
+    <string name="btn_camera_upload_content_description">Prendre une photo</string>
+    <string name="btn_gallery_upload_content_description">Télécharger une image de la galerie</string>
+    <string name="et_description_post_content_description">Description du poste</string>
+    <string name="btn_upload_content_description">Histoire de la poste</string>
+    <string name="tv_user_name_detail_story_content_description">Nom de l\'utilisateur %s</string>
+    <string name="rv_list_stories_content_description">Liste des histoires</string>
+    <string name="fab_add_post_content_description">Créer une histoire</string>
+</resources>

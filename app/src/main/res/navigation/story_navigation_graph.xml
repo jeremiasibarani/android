@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_storiesFragment_to_addStoryFragment"
             app:destination="@id/addStoryFragment" />
+        <action
+            android:id="@+id/action_storiesFragment_to_detailStoryFragment"
+            app:destination="@id/detailStoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/addStoryFragment"
@@ -24,5 +27,15 @@
             app:destination="@id/storiesFragment"
             app:popUpTo="@id/storiesFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailStoryFragment"
+        android:name="com.example.storyapp.view.fragment.DetailStoryFragment"
+        android:label="fragment_detail_story"
+        tools:layout="@layout/fragment_detail_story" >
+        <argument
+            android:name="story_id"
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
 </navigation>

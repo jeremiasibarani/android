@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">StoryApp</string>
+    <string name="story_activity_label">Story</string>
+    <string name="less_than_8_char_password_error">Password setidaknya harus 8 character</string>
+    <string name="email_hint">Email anda</string>
+    <string name="password_hint">Buat password</string>
+    <string name="name_hint">Nama anda</string>
+    <string name="register_text_suggestion">Belum punya akun?</string>
+    <string name="sign_up_text">Daftar</string>
+    <string name="login_text_suggestion">Sudah punya akun?</string>
+    <string name="sign_in_text">Masuk</string>
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="upload_from_camera">Kamera</string>
+    <string name="upload_from_gallery">Galeri</string>
+    <string name="upload_button">Unggah</string>
+    <string name="camera_permission_denied">Kamera tidak dapat berjalan tanpa akses permission</string>
+
+    <string name="card_view_avatar_content_description">Bingkai gambar pengguna</string>
+    <string name="image_avatar_content_description">Gambar pengguna</string>
+    <string name="btn_camera_upload_content_description">Ambil gambar</string>
+    <string name="btn_gallery_upload_content_description">Unggah gambar dari galeri</string>
+    <string name="et_description_post_content_description">Deskripsi cerita</string>
+    <string name="btn_upload_content_description">Mengunggah cerita</string>
+    <string name="tv_user_name_detail_story_content_description">Nama pengguna %s</string>
+    <string name="rv_list_stories_content_description">Daftar cerita</string>
+    <string name="fab_add_post_content_description">Buat cerita</string>
+</resources>

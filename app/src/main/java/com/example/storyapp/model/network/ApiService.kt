@@ -16,6 +16,7 @@ import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 
 interface AuthApiService {
 
@@ -48,6 +49,12 @@ interface StoryApiService{
         @Part("description") description : RequestBody,
         @Part file : MultipartBody.Part
     ) : Response<AddStoryResponse>
+
+    @GET(Constants.STORIES_PATH + "/{id}")
+    suspend fun getDetailStory(
+        @Header("Authorization") token : String,
+        @Path("id") storyId : String
+    ) : Response<DetailStoryResponse>
 
 }
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.example.storyapp.datastore.AuthPreferences
 import com.example.storyapp.model.network.AddStoryResponse
+import com.example.storyapp.model.network.DetailStoryResponse
 import com.example.storyapp.model.network.GetAllStoriesResponse
 import com.example.storyapp.model.network.StoryApiService
 import kotlinx.coroutines.CoroutineScope
@@ -74,6 +75,22 @@ class StoryRepository(
                 emit(NetworkResult.Error(response.message(), response.code()))
             }
 
+        }catch (e : Exception){
+            emit(NetworkResult.Error(e.message.toString()))
+        }
+    }
+
+    fun getDetailStory(storyId : String) : LiveData<NetworkResult<DetailStoryResponse>> = liveData {
+        emit(NetworkResult.Loading)
+        try{
+            Log.i(TAG, token)
+            val response = storyApiService.getDetailStory("Bearer $token", storyId)
+            val responseBody = response.body()
+            if(response.isSuccessful && responseBody != null){
+                emit(NetworkResult.Success(responseBody))
+            }else{
+                emit(NetworkResult.Error(response.message(), response.code()))
+            }
         }catch (e : Exception){
             emit(NetworkResult.Error(e.message.toString()))
         }
