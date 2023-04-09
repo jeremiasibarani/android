@@ -25,4 +25,9 @@
     <string name="tv_user_name_detail_story_content_description">Nom de l\'utilisateur %s</string>
     <string name="rv_list_stories_content_description">Liste des histoires</string>
     <string name="fab_add_post_content_description">Créer une histoire</string>
+
+    <string name="no_data_found_message">Aucune donnée n\'a été trouvée</string>
+    <string name="language_setting">Langue</string>
+    <string name="logout">déconnexion</string>
+    <string name="menu_setting">réglage</string>
 </resources>

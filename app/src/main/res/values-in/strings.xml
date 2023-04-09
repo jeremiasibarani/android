@@ -25,4 +25,9 @@
     <string name="tv_user_name_detail_story_content_description">Nama pengguna %s</string>
     <string name="rv_list_stories_content_description">Daftar cerita</string>
     <string name="fab_add_post_content_description">Buat cerita</string>
+
+    <string name="no_data_found_message">Tidak ada data ditemukan</string>
+    <string name="language_setting">Bahasa</string>
+    <string name="logout">Keluar</string>
+    <string name="menu_setting">Pengaturan</string>
 </resources>

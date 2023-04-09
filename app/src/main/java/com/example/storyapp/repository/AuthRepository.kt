@@ -28,8 +28,8 @@ class AuthRepository(
             val responseBody = response.body()
             if(response.isSuccessful && responseBody != null){
                 emit(NetworkResult.Success(responseBody))
-                val token = responseBody.loginResult.token
                 authPreferences.saveToken(responseBody.loginResult.token)
+                authPreferences.saveName(responseBody.loginResult.name)
             }else{
                 emit(NetworkResult.Error(response.message(), response.code()))
             }
@@ -54,5 +54,9 @@ class AuthRepository(
     }
 
     fun getToken() : LiveData<String> = authPreferences.getToken().asLiveData()
+
+    fun getName() : LiveData<String> = authPreferences.getName().asLiveData()
+
+    suspend fun clearPreferences() = authPreferences.clearAllPreferences()
 
 }

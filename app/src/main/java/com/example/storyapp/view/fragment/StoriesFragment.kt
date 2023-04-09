@@ -28,7 +28,6 @@ class StoriesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         viewBinding =  FragmentStoriesBinding.inflate(inflater, container, false)
 
         viewBinding.rvStories.layoutManager = LinearLayoutManager(requireActivity())
@@ -57,9 +56,20 @@ class StoriesFragment : Fragment() {
     }
 
     private fun bindDataToStoriesRecyclerView(stories : List<Story>){
-        val storiesAdapter = StoriesAdapter()
-        storiesAdapter.submitList(stories)
-        viewBinding.rvStories.adapter = storiesAdapter
+        if(stories.isEmpty()){
+            viewBinding.apply {
+                rvStories.visibility = View.GONE
+                tvDataNotFound.visibility = View.VISIBLE
+            }
+        }else{
+            val storiesAdapter = StoriesAdapter()
+            storiesAdapter.submitList(stories)
+            viewBinding.apply {
+                rvStories.visibility = View.VISIBLE
+                rvStories.adapter = storiesAdapter
+                tvDataNotFound.visibility = View.GONE
+            }
+        }
     }
 
     private fun showLoading(isLoading : Boolean){

@@ -24,4 +24,9 @@
     <string name="tv_user_name_detail_story_content_description">User\'s name %s</string>
     <string name="rv_list_stories_content_description">List of stories</string>
     <string name="fab_add_post_content_description">Create a story</string>
+
+    <string name="no_data_found_message">No data found</string>
+    <string name="language_setting">Language</string>
+    <string name="logout">Logout</string>
+    <string name="menu_setting">Setting</string>
 </resources>
