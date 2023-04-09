@@ -12,7 +12,6 @@ import com.example.storyapp.repository.StoryRepository
 val Context.dataStore : DataStore<Preferences> by preferencesDataStore(name = "authentication")
 
 object Injector {
-    //fun provideAuthRepository(authApiService: AuthApiService) : AuthRepository = AuthRepository(authApiService)
     fun provideAuthRepository(context : Context) : AuthRepository{
         val authApiService = ApiConfig.getAuthApiService()
         val authPreferences = AuthPreferences(context.dataStore)

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">StoryApp</string>
-    <string name="story_activity_label">Story</string>
+    <string name="story_activity_label">Cerita</string>
     <string name="less_than_8_char_password_error">Password setidaknya harus 8 character</string>
     <string name="email_hint">Email anda</string>
     <string name="password_hint">Buat password</string>
@@ -30,4 +30,8 @@
     <string name="language_setting">Bahasa</string>
     <string name="logout">Keluar</string>
     <string name="menu_setting">Pengaturan</string>
+
+    <string name="appwidget_text">Contoh</string>
+    <string name="add_widget">Tambah widget</string>
+    <string name="app_widget_description">Ini adalah deskripsi widget app</string>
 </resources>

@@ -9,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
-import com.example.storyapp.R
 import com.example.storyapp.databinding.FragmentRegisterBinding
 import com.example.storyapp.repository.NetworkResult
 import com.example.storyapp.util.isEmailValid

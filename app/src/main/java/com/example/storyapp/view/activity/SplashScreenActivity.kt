@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.ui.AppBarConfiguration
 import com.example.storyapp.databinding.ActivitySplashScreenBinding
 import com.example.storyapp.viewmodel.AuthViewModel
 import com.example.storyapp.viewmodel.ViewModelFactory
@@ -21,9 +20,9 @@ class SplashScreenActivity : AppCompatActivity() {
         ViewModelFactory.getInstance(applicationContext)
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

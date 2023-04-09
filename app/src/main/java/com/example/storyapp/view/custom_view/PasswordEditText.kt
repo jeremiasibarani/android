@@ -7,7 +7,6 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import com.example.storyapp.R
 
 class PasswordEditText : AppCompatEditText {
@@ -29,10 +28,10 @@ class PasswordEditText : AppCompatEditText {
                 // Do nothing.
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(s.length < 8){
-                    background = ContextCompat.getDrawable(context, R.drawable.edit_text_error_bg)
+                background = if(s.length < 8){
+                    ContextCompat.getDrawable(context, R.drawable.edit_text_error_bg)
                 }else{
-                    background = ContextCompat.getDrawable(context, R.drawable.edit_text_bg)
+                    ContextCompat.getDrawable(context, R.drawable.edit_text_bg)
                 }
             }
             override fun afterTextChanged(s: Editable) {

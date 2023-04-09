@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.storyapp.di.Injector
-import com.example.storyapp.model.network.AuthApiService
-import com.example.storyapp.model.network.StoryApiService
 import com.example.storyapp.repository.AuthRepository
 import com.example.storyapp.repository.StoryRepository
 

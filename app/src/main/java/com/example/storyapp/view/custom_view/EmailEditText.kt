@@ -1,6 +1,5 @@
 package com.example.storyapp.view.custom_view
 
-import android.app.ActionBar.LayoutParams
 import android.content.Context
 import android.graphics.Canvas
 import android.text.Editable
@@ -36,10 +35,10 @@ class EmailEditText : AppCompatEditText {
                 // Do nothing.
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if(!isEmailValid(s.toString().trim())){
-                    background = ContextCompat.getDrawable(context, R.drawable.edit_text_error_bg)
+                background = if(!isEmailValid(s.toString().trim())){
+                    ContextCompat.getDrawable(context, R.drawable.edit_text_error_bg)
                 }else{
-                    background = ContextCompat.getDrawable(context, R.drawable.edit_text_bg)
+                    ContextCompat.getDrawable(context, R.drawable.edit_text_bg)
                 }
             }
             override fun afterTextChanged(s: Editable) {
@@ -56,7 +55,6 @@ class EmailEditText : AppCompatEditText {
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
             visibility = View.GONE
         }
-        val params = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         
     }
 }

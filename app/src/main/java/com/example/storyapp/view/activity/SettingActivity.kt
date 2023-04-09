@@ -1,8 +1,12 @@
 package com.example.storyapp.view.activity
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
+import android.view.View
 import androidx.activity.viewModels
 import androidx.core.view.children
 import com.example.storyapp.R
@@ -22,6 +26,19 @@ class SettingActivity : AppCompatActivity() {
         viewBinding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
         setupView()
+        playAnimation()
+    }
+
+    private fun playAnimation(){
+        val avatar = ObjectAnimator.ofFloat(viewBinding.cvAvatar, View.ALPHA, 1f).setDuration(500)
+        val name = ObjectAnimator.ofFloat(viewBinding.tvName, View.ALPHA, 1f).setDuration(500)
+        val language = ObjectAnimator.ofFloat(viewBinding.cvLanguageSetting, View.ALPHA, 1f).setDuration(500)
+        val logout = ObjectAnimator.ofFloat(viewBinding.cvLogout, View.ALPHA, 1f).setDuration(500)
+
+        AnimatorSet().apply {
+            playSequentially(avatar, name, language, logout)
+            start()
+        }
     }
 
     private fun setupView(){
@@ -35,12 +52,13 @@ class SettingActivity : AppCompatActivity() {
         viewBinding.apply {
             cvLanguageSetting.children.forEach {
                 it.setOnClickListener {
-                    // Todo(Language dialog setting here)
+                    val intent = Intent(Settings.ACTION_LOCALE_SETTINGS)
+                    startActivity(intent)
                 }
             }
             cvLogout.children.forEach {
                 it.setOnClickListener {
-                    viewModel.clearAllPrefences()
+                    viewModel.clearAllPreferences()
                     val intent = Intent(this@SettingActivity, MainActivity::class.java)
                     startActivity(intent)
                     finishAffinity()

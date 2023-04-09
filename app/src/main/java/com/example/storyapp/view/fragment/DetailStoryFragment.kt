@@ -54,7 +54,7 @@ class DetailStoryFragment : Fragment() {
         return viewBinding.root
     }
 
-    fun bindDataToView(story : Story){
+    private fun bindDataToView(story : Story){
         viewBinding.apply {
             tvName.text = story.name
             tvName.contentDescription = resources.getString(R.string.tv_user_name_detail_story_content_description, story.name)

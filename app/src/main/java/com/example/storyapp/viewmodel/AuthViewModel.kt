@@ -1,6 +1,5 @@
 package com.example.storyapp.viewmodel
 
-import android.media.session.MediaSession.Token
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +16,7 @@ class AuthViewModel(
     fun getToken() : LiveData<String> = authRepository.getToken()
 
     fun getName() : LiveData<String> = authRepository.getName()
-    fun clearAllPrefences() = viewModelScope.launch {
+    fun clearAllPreferences() = viewModelScope.launch {
         authRepository.clearPreferences()
     }
 

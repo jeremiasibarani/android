@@ -1,6 +1,8 @@
 package com.example.storyapp.view.fragment
 
 import android.Manifest
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.Intent.ACTION_GET_CONTENT
@@ -90,6 +92,8 @@ class AddStoryFragment : Fragment() {
             uploadStory()
         }
 
+        playAnimation()
+
         return viewBinding.root
     }
 
@@ -135,6 +139,24 @@ class AddStoryFragment : Fragment() {
             }
         }else{
             Toast.makeText(requireActivity(), "Silahkan isi deskripsi atau pilih gambar dahulu", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun playAnimation(){
+        val avatar = ObjectAnimator.ofFloat(viewBinding.cvAvatar, View.ALPHA, 1f).setDuration(500)
+        val camera = ObjectAnimator.ofFloat(viewBinding.btnUploadFromCamera, View.ALPHA, 1f).setDuration(500)
+        val gallery = ObjectAnimator.ofFloat(viewBinding.btnUploadFromGallery, View.ALPHA, 1f).setDuration(500)
+        val description = ObjectAnimator.ofFloat(viewBinding.etDescription, View.ALPHA, 1f).setDuration(500)
+        val upload = ObjectAnimator.ofFloat(viewBinding.btnPostStory, View.ALPHA, 1f).setDuration(500)
+
+
+        val cameraGallery = AnimatorSet().apply {
+            playTogether(camera, gallery)
+        }
+
+        AnimatorSet().apply {
+            playSequentially(avatar, cameraGallery, description, upload)
+            start()
         }
     }
 
