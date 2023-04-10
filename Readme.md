@@ -12,10 +12,7 @@ B. Package
 The packaging structure is grouped by functionality, for instance all of functionalities about views are placed inside view package  
 
 C. Design pattern  
-Model-View-ViewModel is the design pattern used in this app, the diagram is as follow :  
-<img src="https://d17ivq9b7rppb3.cloudfront.net/original/academy/20201216131847331b0da673f09e74f68866829faebd34.png"
-     alt="Markdown Monster icon"
-     style="float: left; margin-right: 10px;" /> <br>
+Model-View-ViewModel is the design pattern used in this app, the [diagram](https://d17ivq9b7rppb3.cloudfront.net/original/academy/20201216131847331b0da673f09e74f68866829faebd34.png)
     
 D. Dependencies : <br>
     1. Camera X  
