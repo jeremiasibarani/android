@@ -2,6 +2,7 @@
     <string name="app_name">StoryApp</string>
     <string name="story_activity_label">Story</string>
     <string name="less_than_8_char_password_error">Password must at least 8 characters</string>
+    <string name="email_format_is_not_valid">Email format is not valid</string>
     <string name="email_hint">Your email</string>
     <string name="password_hint">Create password</string>
     <string name="name_hint">Your name</string>

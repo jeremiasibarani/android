@@ -28,10 +28,11 @@ class PasswordEditText : AppCompatEditText {
                 // Do nothing.
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                background = if(s.length < 8){
-                    ContextCompat.getDrawable(context, R.drawable.edit_text_error_bg)
+                if(s.length < 8){
+                    background = ContextCompat.getDrawable(context, R.drawable.edit_text_error_bg)
+                    error = resources.getString(R.string.less_than_8_char_password_error)
                 }else{
-                    ContextCompat.getDrawable(context, R.drawable.edit_text_bg)
+                    background = ContextCompat.getDrawable(context, R.drawable.edit_text_bg)
                 }
             }
             override fun afterTextChanged(s: Editable) {

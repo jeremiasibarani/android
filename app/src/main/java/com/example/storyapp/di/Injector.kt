@@ -14,13 +14,13 @@ val Context.dataStore : DataStore<Preferences> by preferencesDataStore(name = "a
 object Injector {
     fun provideAuthRepository(context : Context) : AuthRepository{
         val authApiService = ApiConfig.getAuthApiService()
-        val authPreferences = AuthPreferences(context.dataStore)
+        val authPreferences = AuthPreferences.getInstance(context.dataStore)
         return AuthRepository(authApiService, authPreferences)
     }
 
     fun provideStoryRepository(context: Context) : StoryRepository{
         val storyApiService = ApiConfig.getStoryApiService()
-        val authPreferences = AuthPreferences(context.dataStore)
+        val authPreferences = AuthPreferences.getInstance(context.dataStore)
         return StoryRepository(storyApiService, authPreferences)
     }
 }

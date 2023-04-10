@@ -35,10 +35,11 @@ class EmailEditText : AppCompatEditText {
                 // Do nothing.
             }
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                background = if(!isEmailValid(s.toString().trim())){
-                    ContextCompat.getDrawable(context, R.drawable.edit_text_error_bg)
+                if(!isEmailValid(s.toString().trim())){
+                    background = ContextCompat.getDrawable(context, R.drawable.edit_text_error_bg)
+                    error = resources.getString(R.string.email_format_is_not_valid)
                 }else{
-                    ContextCompat.getDrawable(context, R.drawable.edit_text_bg)
+                    background = ContextCompat.getDrawable(context, R.drawable.edit_text_bg)
                 }
             }
             override fun afterTextChanged(s: Editable) {

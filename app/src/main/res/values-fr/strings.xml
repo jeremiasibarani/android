@@ -3,6 +3,7 @@
     <string name="app_name">StoryApp</string>
     <string name="story_activity_label">Histoire</string>
     <string name="less_than_8_char_password_error">Le mot de passe doit comporter au moins 8 caractères</string>
+    <string name="email_format_is_not_valid">Le format de l\'e-mail n\'est pas valide</string>
     <string name="email_hint">Votre email</string>
     <string name="password_hint">Créer un mot de passe</string>
     <string name="name_hint">Votre nom</string>

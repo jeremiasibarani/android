@@ -28,7 +28,6 @@ class RegisterFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         viewBinding =  FragmentRegisterBinding.inflate(inflater, container, false)
 
         setupView()

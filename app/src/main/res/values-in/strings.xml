@@ -3,6 +3,7 @@
     <string name="app_name">StoryApp</string>
     <string name="story_activity_label">Cerita</string>
     <string name="less_than_8_char_password_error">Password setidaknya harus 8 character</string>
+    <string name="email_format_is_not_valid">Format email tidak valid</string>
     <string name="email_hint">Email anda</string>
     <string name="password_hint">Buat password</string>
     <string name="name_hint">Nama anda</string>

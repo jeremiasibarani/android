@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class AuthPreferences (private val dataStore : DataStore<Preferences>){
+class AuthPreferences private constructor(private val dataStore : DataStore<Preferences>){
 
     private val TOKEN_KEY = stringPreferencesKey("token_key")
     private val NAME_KEY = stringPreferencesKey("name_key")
