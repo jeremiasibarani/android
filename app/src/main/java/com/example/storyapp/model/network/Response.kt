@@ -29,8 +29,8 @@ data class Story(
     val description : String,
     val photoUrl : String?,
     val createdAt : String,
-    val lat : Float,
-    val long : Float
+    val lat : Double,
+    val long : Double
 )
 
 data class AddStoryResponse(

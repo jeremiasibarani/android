@@ -31,7 +31,7 @@
     <string name="language_setting">Langue</string>
     <string name="logout">déconnexion</string>
     <string name="menu_setting">réglage</string>
-
+    <string name="menu_location">la localisation</string>
     <string name="appwidget_text">Exemple</string>
     <string name="add_widget">Ajouter widget</string>
     <string name="app_widget_description">Ceci est une description de widget d\'application</string>

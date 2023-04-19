@@ -28,6 +28,11 @@ class StoryActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
+            R.id.location -> {
+                val intent = Intent(this@StoryActivity, MapsActivity::class.java)
+                startActivity(intent)
+                return true
+            }
         }
         return true
     }

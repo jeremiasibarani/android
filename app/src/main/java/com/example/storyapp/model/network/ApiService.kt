@@ -17,6 +17,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface AuthApiService {
 
@@ -40,7 +41,10 @@ interface AuthApiService {
 interface StoryApiService{
 
     @GET(Constants.STORIES_PATH)
-    suspend fun getStories(@Header("Authorization") token : String) : Response<GetAllStoriesResponse>
+    suspend fun getStories(
+        @Header("Authorization") token : String,
+        @Query("location") location : Int
+    ) : Response<GetAllStoriesResponse>
 
     @Multipart
     @POST(Constants.STORIES_PATH)
@@ -60,6 +64,7 @@ interface StoryApiService{
 
 class ApiConfig{
     companion object{
+        var BASE_API = BuildConfig.BASE_API
         private val loggingInterceptor = HttpLoggingInterceptor()
             .setLevel(HttpLoggingInterceptor.Level.BODY)
 
@@ -68,7 +73,7 @@ class ApiConfig{
             .build()
 
         private val retrofit = Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_API)
+            .baseUrl(BASE_API)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

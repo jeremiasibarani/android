@@ -30,6 +30,7 @@
     <string name="language_setting">Language</string>
     <string name="logout">Logout</string>
     <string name="menu_setting">Setting</string>
+    <string name="menu_location">Location</string>
     <string name="appwidget_text">Example</string>
     <string name="add_widget">Add widget</string>
     <string name="app_widget_description">This is an app widget description</string>

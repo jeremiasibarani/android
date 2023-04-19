@@ -17,6 +17,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import com.example.storyapp.util.Constants.LOCATION_REQUEST_FALSE
 
 
 class StoryRepository(
@@ -35,11 +36,11 @@ class StoryRepository(
         }
     }
 
-    fun getStories() : LiveData<NetworkResult<GetAllStoriesResponse>> = liveData{
+    fun getStories(location : Int = LOCATION_REQUEST_FALSE) : LiveData<NetworkResult<GetAllStoriesResponse>> = liveData{
         emit(NetworkResult.Loading)
         try{
             Log.i(TAG, token)
-            val response = storyApiService.getStories("Bearer $token")
+            val response = storyApiService.getStories("Bearer $token", location)
             val responseBody = response.body()
             if(response.isSuccessful && responseBody != null){
                 emit(NetworkResult.Success(responseBody))

@@ -18,6 +18,8 @@ class ViewModelFactory private constructor(
             return AuthViewModel(authRepository as AuthRepository) as T
         }else if(modelClass.isAssignableFrom(StoryViewModel::class.java)){
             return StoryViewModel(storyRepository as StoryRepository) as T
+        }else if(modelClass.isAssignableFrom(MapsViewModel::class.java)){
+            return MapsViewModel(storyRepository as StoryRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }
