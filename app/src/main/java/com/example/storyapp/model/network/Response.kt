@@ -20,7 +20,7 @@ data class LoginResult(
 data class GetAllStoriesResponse(
     val error : Boolean,
     val message : String,
-    val listStory : List<Story> = emptyList()
+    val listStory : List<Story>
 )
 
 data class Story(

@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.paging.LoadState
+import androidx.paging.LoadStateAdapter
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
@@ -16,6 +17,7 @@ import com.example.storyapp.databinding.FragmentStoriesBinding
 import com.example.storyapp.model.local.StoryEntity
 import com.example.storyapp.model.network.Story
 import com.example.storyapp.repository.NetworkResult
+import com.example.storyapp.view.adapter.LoadingStateAdapter
 import com.example.storyapp.view.adapter.StoriesAdapter
 import com.example.storyapp.viewmodel.StoryViewModel
 import com.example.storyapp.viewmodel.ViewModelFactory
@@ -23,6 +25,7 @@ import com.example.storyapp.viewmodel.ViewModelFactory
 class StoriesFragment : Fragment() {
 
     private lateinit var viewBinding : FragmentStoriesBinding
+    private lateinit var storiesAdapter : StoriesAdapter
     private val sharedViewModel : StoryViewModel by activityViewModels{
         ViewModelFactory.getInstance(requireContext())
     }
@@ -32,27 +35,7 @@ class StoriesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         viewBinding =  FragmentStoriesBinding.inflate(inflater, container, false)
-
-        viewBinding.rvStories.layoutManager = LinearLayoutManager(requireActivity())
-
-//        sharedViewModel.getStories().observe(viewLifecycleOwner){ networkResult ->
-//            when(networkResult){
-//                is NetworkResult.Loading -> showLoading(true)
-//                is NetworkResult.Error -> {
-//                    showLoading(false)
-//                    Toast.makeText(requireActivity(), networkResult.message, Toast.LENGTH_SHORT).show()
-//                }
-//                is NetworkResult.Success -> {
-//                    showLoading(false)
-//                    Toast.makeText(requireActivity(), networkResult.data.message, Toast.LENGTH_SHORT).show()
-//                    bindDataToStoriesRecyclerView(networkResult.data.listStory)
-//                }
-//            }
-//        }
-        sharedViewModel.getStoriesWithPagination().observe(viewLifecycleOwner){pagingDataStory ->
-            bindDataToStoriesRecyclerView(pagingDataStory)
-        }
-
+        setupPaginationAdapterForRecyclerView()
         viewBinding.fabAddPost.setOnClickListener {
             viewBinding.root.findNavController()
                 .navigate(R.id.action_storiesFragment_to_addStoryFragment)
@@ -61,9 +44,15 @@ class StoriesFragment : Fragment() {
         return viewBinding.root
     }
 
-    private fun bindDataToStoriesRecyclerView(stories : PagingData<StoryEntity>){
-        val storiesAdapter = StoriesAdapter()
-        storiesAdapter.submitData(lifecycle, stories)
+    private fun setupPaginationAdapterForRecyclerView(){
+        storiesAdapter = StoriesAdapter()
+        val loadingStateAdapter = LoadingStateAdapter{
+            storiesAdapter.retry()
+        }
+        viewBinding.rvStories.adapter = storiesAdapter.withLoadStateFooter(
+            footer = loadingStateAdapter
+        )
+        viewBinding.rvStories.layoutManager = LinearLayoutManager(requireActivity())
         storiesAdapter.addLoadStateListener { loadState ->
             if(loadState.refresh is LoadState.Loading){
                 showLoading(true)
@@ -87,7 +76,10 @@ class StoriesFragment : Fragment() {
                 }
             }
         }
-        viewBinding.rvStories.adapter = storiesAdapter
+
+        sharedViewModel.getStoriesWithPagination().observe(viewLifecycleOwner){pagingDataStory ->
+            storiesAdapter.submitData(lifecycle, pagingDataStory)
+        }
     }
 
     private fun showEmptyView(isDataEmpty : Boolean){

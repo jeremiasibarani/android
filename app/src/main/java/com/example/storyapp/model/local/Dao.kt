@@ -19,3 +19,14 @@ interface StoryDao{
     suspend fun deleteAllStories()
 
 }
+@Dao
+interface RemoteKeysDao{
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertKeys(remoteKeys : List<RemoteKey>)
+
+    @Query("SELECT * FROM remote_keys WHERE id = :id")
+    suspend fun getRemoteKeysById(id : String) : RemoteKey?
+
+    @Query("DELETE FROM remote_keys")
+    suspend fun deleteAllRemoteKeys()
+}
