@@ -8,9 +8,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
 import com.example.storyapp.databinding.FragmentStoriesBinding
+import com.example.storyapp.model.local.StoryEntity
 import com.example.storyapp.model.network.Story
 import com.example.storyapp.repository.NetworkResult
 import com.example.storyapp.view.adapter.StoriesAdapter
@@ -32,19 +35,22 @@ class StoriesFragment : Fragment() {
 
         viewBinding.rvStories.layoutManager = LinearLayoutManager(requireActivity())
 
-        sharedViewModel.getStories().observe(viewLifecycleOwner){ networkResult ->
-            when(networkResult){
-                is NetworkResult.Loading -> showLoading(true)
-                is NetworkResult.Error -> {
-                    showLoading(false)
-                    Toast.makeText(requireActivity(), networkResult.message, Toast.LENGTH_SHORT).show()
-                }
-                is NetworkResult.Success -> {
-                    showLoading(false)
-                    Toast.makeText(requireActivity(), networkResult.data.message, Toast.LENGTH_SHORT).show()
-                    bindDataToStoriesRecyclerView(networkResult.data.listStory)
-                }
-            }
+//        sharedViewModel.getStories().observe(viewLifecycleOwner){ networkResult ->
+//            when(networkResult){
+//                is NetworkResult.Loading -> showLoading(true)
+//                is NetworkResult.Error -> {
+//                    showLoading(false)
+//                    Toast.makeText(requireActivity(), networkResult.message, Toast.LENGTH_SHORT).show()
+//                }
+//                is NetworkResult.Success -> {
+//                    showLoading(false)
+//                    Toast.makeText(requireActivity(), networkResult.data.message, Toast.LENGTH_SHORT).show()
+//                    bindDataToStoriesRecyclerView(networkResult.data.listStory)
+//                }
+//            }
+//        }
+        sharedViewModel.getStoriesWithPagination().observe(viewLifecycleOwner){pagingDataStory ->
+            bindDataToStoriesRecyclerView(pagingDataStory)
         }
 
         viewBinding.fabAddPost.setOnClickListener {
@@ -55,18 +61,42 @@ class StoriesFragment : Fragment() {
         return viewBinding.root
     }
 
-    private fun bindDataToStoriesRecyclerView(stories : List<Story>){
-        if(stories.isEmpty()){
-            viewBinding.apply {
+    private fun bindDataToStoriesRecyclerView(stories : PagingData<StoryEntity>){
+        val storiesAdapter = StoriesAdapter()
+        storiesAdapter.submitData(lifecycle, stories)
+        storiesAdapter.addLoadStateListener { loadState ->
+            if(loadState.refresh is LoadState.Loading){
+                showLoading(true)
+            }else{
+                showLoading(false)
+                if(loadState.append.endOfPaginationReached){
+                    if(storiesAdapter.itemCount < 1){
+                        showEmptyView(true)
+                    }else{
+                        showEmptyView(false)
+                    }
+                }
+                val error = when{
+                    loadState.prepend is LoadState.Error -> loadState.prepend as LoadState.Error
+                    loadState.append is LoadState.Error -> loadState.append as LoadState.Error
+                    loadState.refresh is LoadState.Error -> loadState.refresh as LoadState.Error
+                    else -> null
+                }
+                error?.let{
+                    Toast.makeText(requireActivity(), it.error.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        viewBinding.rvStories.adapter = storiesAdapter
+    }
+
+    private fun showEmptyView(isDataEmpty : Boolean){
+        viewBinding.apply {
+            if(isDataEmpty){
                 rvStories.visibility = View.GONE
                 tvDataNotFound.visibility = View.VISIBLE
-            }
-        }else{
-            val storiesAdapter = StoriesAdapter()
-            storiesAdapter.submitList(stories)
-            viewBinding.apply {
+            }else{
                 rvStories.visibility = View.VISIBLE
-                rvStories.adapter = storiesAdapter
                 tvDataNotFound.visibility = View.GONE
             }
         }

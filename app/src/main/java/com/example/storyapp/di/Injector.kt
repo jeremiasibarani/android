@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.storyapp.datastore.AuthPreferences
+import com.example.storyapp.model.local.StoryDatabase
 import com.example.storyapp.model.network.ApiConfig
 import com.example.storyapp.repository.AuthRepository
 import com.example.storyapp.repository.StoryRepository
@@ -21,6 +22,7 @@ object Injector {
     fun provideStoryRepository(context: Context) : StoryRepository{
         val storyApiService = ApiConfig.getStoryApiService()
         val authPreferences = AuthPreferences.getInstance(context.dataStore)
-        return StoryRepository(storyApiService, authPreferences)
+        val storyDatabase = StoryDatabase.getDatabase(context)
+        return StoryRepository(storyApiService, authPreferences, storyDatabase)
     }
 }

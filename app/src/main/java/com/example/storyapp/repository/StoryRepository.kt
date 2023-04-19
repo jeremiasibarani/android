@@ -3,11 +3,13 @@ package com.example.storyapp.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.paging.*
 import com.example.storyapp.datastore.AuthPreferences
-import com.example.storyapp.model.network.AddStoryResponse
-import com.example.storyapp.model.network.DetailStoryResponse
-import com.example.storyapp.model.network.GetAllStoriesResponse
-import com.example.storyapp.model.network.StoryApiService
+import com.example.storyapp.model.local.StoryDatabase
+import com.example.storyapp.model.local.StoryEntity
+import com.example.storyapp.model.network.*
+import com.example.storyapp.paging.StoriesPagingSource
+import com.example.storyapp.paging.StoriesRemoteMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,7 +24,8 @@ import com.example.storyapp.util.Constants.LOCATION_REQUEST_FALSE
 
 class StoryRepository(
     private val storyApiService: StoryApiService,
-    private val authPreferences: AuthPreferences
+    private val authPreferences: AuthPreferences,
+    private val storyDatabase: StoryDatabase
 ) {
 
     private lateinit var token : String
@@ -35,6 +38,20 @@ class StoryRepository(
             }
         }
     }
+    @OptIn(ExperimentalPagingApi::class)
+    fun getStoriesWithPagination(
+        pageSize : Int
+    ) : LiveData<PagingData<StoryEntity>> = Pager(
+        config = PagingConfig(
+            pageSize = pageSize
+        ),
+        remoteMediator = StoriesRemoteMediator(
+            storyDatabase, storyApiService, "Bearer $token"
+        ),
+        pagingSourceFactory = {
+            storyDatabase.storyDao().getStories()
+        }
+    ).liveData
 
     fun getStories(location : Int = LOCATION_REQUEST_FALSE) : LiveData<NetworkResult<GetAllStoriesResponse>> = liveData{
         emit(NetworkResult.Loading)

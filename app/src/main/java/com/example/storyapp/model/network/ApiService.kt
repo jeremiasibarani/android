@@ -46,6 +46,13 @@ interface StoryApiService{
         @Query("location") location : Int
     ) : Response<GetAllStoriesResponse>
 
+    @GET(Constants.STORIES_PATH)
+    suspend fun getStoriesWithPagination(
+        @Header("Authorization") token : String,
+        @Query("page") page : Int,
+        @Query("size") size : Int
+    ) : Response<GetAllStoriesResponse>
+
     @Multipart
     @POST(Constants.STORIES_PATH)
     suspend fun addStory(
