@@ -1,5 +1,6 @@
 package com.example.storyapp.view.activity
 
+import androidx.lifecycle.Lifecycle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -35,5 +36,6 @@ class SettingActivityTest{
         onView(withId(R.id.cv_logout)).check(matches(isDisplayed()))
             .perform(click())
         intended(hasComponent(AuthenticationActivity::class.java.name))
+        assertTrue(activity.scenario.state == Lifecycle.State.DESTROYED)
     }
 }

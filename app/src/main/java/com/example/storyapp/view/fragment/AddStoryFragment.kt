@@ -16,7 +16,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +23,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.example.storyapp.R
@@ -31,7 +31,6 @@ import com.example.storyapp.databinding.FragmentAddStoryBinding
 import com.example.storyapp.repository.NetworkResult
 import com.example.storyapp.util.createTempImageFile
 import com.example.storyapp.util.reduceFileImage
-import com.example.storyapp.util.rotateBitmap
 import com.example.storyapp.util.uriToFile
 import com.example.storyapp.viewmodel.StoryViewModel
 import com.example.storyapp.viewmodel.ViewModelFactory
@@ -166,20 +165,23 @@ class AddStoryFragment : Fragment() {
         val description = viewBinding.etDescription.text.toString()
         if(getFile != null && description.isNotEmpty()){
             val uploadedFile : File = reduceFileImage(getFile!!)
-            sharedViewModel.postStory(description, uploadedFile, lat, long).observe(viewLifecycleOwner){ networkResult ->
-                when(networkResult){
-                    is NetworkResult.Loading -> showLoading(true)
-                    is NetworkResult.Error -> {
-                        showLoading(false)
-                        showToast(requireActivity(), networkResult.message)
-                    }
-                    is NetworkResult.Success -> {
-                        showLoading(false)
-                        networkResult.data.apply {
-                            if(!error){
-                                showToast(requireActivity(), message)
-                                viewBinding.root.findNavController()
-                                    .navigate(R.id.action_addStoryFragment_to_storiesFragment)
+            sharedViewModel.getToken().observe(viewLifecycleOwner){token ->
+                showLoading(true)
+                sharedViewModel.postStory(description, uploadedFile, lat, long, token).observe(viewLifecycleOwner){ networkResult ->
+                    when(networkResult){
+                        is NetworkResult.Loading -> showLoading(true)
+                        is NetworkResult.Error -> {
+                            showLoading(false)
+                            showToast(requireActivity(), networkResult.message)
+                        }
+                        is NetworkResult.Success -> {
+                            showLoading(false)
+                            networkResult.data.apply {
+                                if(!error){
+                                    showToast(requireActivity(), message)
+                                    viewBinding.root.findNavController()
+                                        .navigate(R.id.action_addStoryFragment_to_storiesFragment)
+                                }
                             }
                         }
                     }

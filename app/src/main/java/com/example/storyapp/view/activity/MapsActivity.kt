@@ -46,20 +46,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         supportActionBar?.hide()
 
-        viewModel.getStories().observe(this@MapsActivity){networkResult ->
-            when(networkResult){
-                is NetworkResult.Loading -> showLoading(true)
-                is NetworkResult.Error -> {
-                    showLoading(false)
-                    showToast(this@MapsActivity, networkResult.message)
-                }
-                is NetworkResult.Success -> {
-                    showLoading(false)
-                    networkResult.data.apply {
-                        if(!error){
-                            addMarkerFromStories(listStory)
+        viewModel.getToken().observe(this@MapsActivity){token ->
+            showLoading(true)
+            viewModel.getStories(token = token).observe(this@MapsActivity){networkResult ->
+                when(networkResult){
+                    is NetworkResult.Loading -> showLoading(true)
+                    is NetworkResult.Error -> {
+                        showLoading(false)
+                        showToast(this@MapsActivity, networkResult.message)
+                    }
+                    is NetworkResult.Success -> {
+                        showLoading(false)
+                        networkResult.data.apply {
+                            if(!error){
+                                addMarkerFromStories(listStory)
+                            }
+                            showToast(this@MapsActivity, message)
                         }
-                        showToast(this@MapsActivity, message)
                     }
                 }
             }

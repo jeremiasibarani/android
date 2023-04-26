@@ -1,5 +1,6 @@
 package com.example.storyapp.view.activity
 
+import androidx.lifecycle.Lifecycle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
@@ -82,6 +83,8 @@ class AuthenticationActivityTest{
         onView(withId(R.id.btn_login)).check(matches(isDisplayed()))
             .perform(click())
         intended(hasComponent(StoryActivity::class.java.name))
+        onView(withId(R.id.rv_stories)).check(matches(isDisplayed()))
+        assertTrue(activity.scenario.state == Lifecycle.State.DESTROYED)
     }
 
 }

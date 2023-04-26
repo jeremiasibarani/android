@@ -30,19 +30,22 @@ class DetailStoryFragment : Fragment() {
 
         val storyId = arguments?.getString("story_id")
         storyId?.let{
-            sharedViewModel.getDetailStory(it).observe(viewLifecycleOwner){ networkResult ->
-                when(networkResult){
-                    is NetworkResult.Loading -> showLoading(true)
-                    is NetworkResult.Error -> {
-                        showLoading(false)
-                        Toast.makeText(requireActivity(), networkResult.message, Toast.LENGTH_SHORT).show()
-                    }
-                    is NetworkResult.Success -> {
-                        showLoading(false)
-                        networkResult.data.apply {
-                            Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
-                            if(!error){
-                                bindDataToView(story)
+            sharedViewModel.getToken().observe(viewLifecycleOwner){token ->
+                showLoading(true)
+                sharedViewModel.getDetailStory(it, token).observe(viewLifecycleOwner){ networkResult ->
+                    when(networkResult){
+                        is NetworkResult.Loading -> showLoading(true)
+                        is NetworkResult.Error -> {
+                            showLoading(false)
+                            Toast.makeText(requireActivity(), networkResult.message, Toast.LENGTH_SHORT).show()
+                        }
+                        is NetworkResult.Success -> {
+                            showLoading(false)
+                            networkResult.data.apply {
+                                Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
+                                if(!error){
+                                    bindDataToView(story)
+                                }
                             }
                         }
                     }

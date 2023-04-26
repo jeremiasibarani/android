@@ -36,6 +36,7 @@ class StoryViewModelTest{
 
     private lateinit var storyViewModel: StoryViewModel
     private val dummyStories = DummyData.generateDummyStories()
+    private val dummyToken = "999"
 
     @Mock
     private lateinit var storyRepository: StoryRepository
@@ -45,10 +46,10 @@ class StoryViewModelTest{
         val data : PagingData<StoryEntity> = StoriesPagingSource.snapshot(dummyStories)
         val expectedStories = MutableLiveData<PagingData<StoryEntity>>()
         expectedStories.value = data
-        `when`(storyRepository.getStoriesWithPagination(5)).thenReturn(expectedStories)
+        `when`(storyRepository.getStoriesWithPagination(5, dummyToken)).thenReturn(expectedStories)
 
         storyViewModel = StoryViewModel(storyRepository)
-        val actualStories : PagingData<StoryEntity> = storyRepository.getStoriesWithPagination(5).getOrAwaitValue()
+        val actualStories : PagingData<StoryEntity> = storyRepository.getStoriesWithPagination(5, dummyToken).getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = StoriesAdapter.StoryItemCallback,
@@ -68,10 +69,10 @@ class StoryViewModelTest{
         val data : PagingData<StoryEntity> = StoriesPagingSource.snapshot(emptyList())
         val expectedStories = MutableLiveData<PagingData<StoryEntity>>()
         expectedStories.value = data
-        `when`(storyRepository.getStoriesWithPagination(5)).thenReturn(expectedStories)
+        `when`(storyRepository.getStoriesWithPagination(5, dummyToken)).thenReturn(expectedStories)
 
         storyViewModel = StoryViewModel(storyRepository)
-        val actualStories : PagingData<StoryEntity> = storyRepository.getStoriesWithPagination(5).getOrAwaitValue()
+        val actualStories : PagingData<StoryEntity> = storyRepository.getStoriesWithPagination(5, dummyToken).getOrAwaitValue()
 
         val differ = AsyncPagingDataDiffer(
             diffCallback = StoriesAdapter.StoryItemCallback,

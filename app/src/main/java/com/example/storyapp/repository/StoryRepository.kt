@@ -2,6 +2,7 @@ package com.example.storyapp.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
 import androidx.paging.*
 import com.example.storyapp.datastore.AuthPreferences
@@ -9,17 +10,14 @@ import com.example.storyapp.model.local.StoryDatabase
 import com.example.storyapp.model.local.StoryEntity
 import com.example.storyapp.model.network.*
 import com.example.storyapp.paging.StoriesRemoteMediator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.storyapp.util.Constants.LOCATION_REQUEST_FALSE
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-import com.example.storyapp.util.Constants.LOCATION_REQUEST_FALSE
-import okhttp3.RequestBody
 
 
 class StoryRepository(
@@ -27,20 +25,10 @@ class StoryRepository(
     private val authPreferences: AuthPreferences,
     private val storyDatabase: StoryDatabase
 ) {
-
-    private lateinit var token : String
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
-
-    init{
-        coroutineScope.launch {
-            authPreferences.getToken().collect{
-                token = it
-            }
-        }
-    }
     @OptIn(ExperimentalPagingApi::class)
     fun getStoriesWithPagination(
-        pageSize : Int
+        pageSize : Int,
+        token : String
     ) : LiveData<PagingData<StoryEntity>> = Pager(
         config = PagingConfig(
             pageSize = pageSize
@@ -53,7 +41,7 @@ class StoryRepository(
         }
     ).liveData
 
-    fun getStories(location : Int = LOCATION_REQUEST_FALSE) : LiveData<NetworkResult<GetAllStoriesResponse>> = liveData{
+    fun getStories(location : Int = LOCATION_REQUEST_FALSE, token : String) : LiveData<NetworkResult<GetAllStoriesResponse>> = liveData{
         emit(NetworkResult.Loading)
         try{
             Log.i(TAG, token)
@@ -69,7 +57,7 @@ class StoryRepository(
         }
     }
 
-    fun addStory(description : String, file : File, lat : Double?, lot : Double?) : LiveData<NetworkResult<AddStoryResponse>> = liveData{
+    fun addStory(description : String, file : File, lat : Double?, lot : Double?, token : String) : LiveData<NetworkResult<AddStoryResponse>> = liveData{
         emit(NetworkResult.Loading)
         val parts = mutableMapOf<String, RequestBody>()
         val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
@@ -106,7 +94,7 @@ class StoryRepository(
         }
     }
 
-    fun getDetailStory(storyId : String) : LiveData<NetworkResult<DetailStoryResponse>> = liveData {
+    fun getDetailStory(storyId : String, token : String) : LiveData<NetworkResult<DetailStoryResponse>> = liveData {
         emit(NetworkResult.Loading)
         try{
             Log.i(TAG, token)
@@ -121,6 +109,8 @@ class StoryRepository(
             emit(NetworkResult.Error(e.message.toString()))
         }
     }
+
+    fun getToken() : LiveData<String> = authPreferences.getToken().asLiveData()
 
     companion object{
         private val TAG = StoryRepository::class.java.simpleName

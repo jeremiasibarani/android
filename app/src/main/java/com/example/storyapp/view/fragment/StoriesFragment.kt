@@ -1,22 +1,17 @@
 package com.example.storyapp.view.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.paging.LoadState
-import androidx.paging.LoadStateAdapter
-import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.storyapp.R
 import com.example.storyapp.databinding.FragmentStoriesBinding
-import com.example.storyapp.model.local.StoryEntity
-import com.example.storyapp.model.network.Story
-import com.example.storyapp.repository.NetworkResult
 import com.example.storyapp.view.adapter.LoadingStateAdapter
 import com.example.storyapp.view.adapter.StoriesAdapter
 import com.example.storyapp.viewmodel.StoryViewModel
@@ -77,8 +72,10 @@ class StoriesFragment : Fragment() {
             }
         }
 
-        sharedViewModel.getStoriesWithPagination().observe(viewLifecycleOwner){pagingDataStory ->
-            storiesAdapter.submitData(lifecycle, pagingDataStory)
+        sharedViewModel.getToken().observe(viewLifecycleOwner){token ->
+            sharedViewModel.getStoriesWithPagination(token = token).observe(viewLifecycleOwner){pagingDataStory ->
+                storiesAdapter.submitData(lifecycle, pagingDataStory)
+            }
         }
     }
 
