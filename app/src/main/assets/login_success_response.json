@@ -1,0 +1,9 @@
+{
+  "error": false,
+  "message": "success",
+  "loginResult": {
+    "userId": "user4MSE0z",
+    "name": "shingen",
+    "token": "eyJhbGciOiJeyJ1c2VySWQiOiJ1c2VyLWFtNy03ZHF6SFk0TVNFMHoiLCJpYXQiOjE2ODIwNTI1ODR9.RRAOE65BceJxTJPTWXUbjt-p95zQNgmOc_49IPQ77Nw"
+  }
+}

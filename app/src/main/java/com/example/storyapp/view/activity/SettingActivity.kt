@@ -59,7 +59,7 @@ class SettingActivity : AppCompatActivity() {
             cvLogout.children.forEach {
                 it.setOnClickListener {
                     viewModel.clearAllPreferences()
-                    val intent = Intent(this@SettingActivity, MainActivity::class.java)
+                    val intent = Intent(this@SettingActivity, AuthenticationActivity::class.java)
                     startActivity(intent)
                     finishAffinity()
                 }

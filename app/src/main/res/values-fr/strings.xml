@@ -36,4 +36,8 @@
     <string name="add_widget">Ajouter widget</string>
     <string name="app_widget_description">Ceci est une description de widget d\'application</string>
     <string name="retry">essayer à nouveau</string>
+    <string name="permission_not_granted">L\'action ne peut être effectuée sans autorisation</string>
+    <string name="location_not_found">Emplacement non</string>
+    <string name="include_location">Inclure l\'emplacement actuel</string>
+    <string name="post_description_or_image_empty">Veuillez d\'abord remplir la description ou sélectionner une image</string>
 </resources>

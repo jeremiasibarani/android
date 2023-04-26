@@ -10,25 +10,24 @@
         android:id="@+id/cv_avatar"
         android:layout_width="250dp"
         android:layout_height="250dp"
+        android:alpha="0"
+        android:contentDescription="@string/card_view_avatar_content_description"
         app:cardCornerRadius="10pt"
         app:cardElevation="0dp"
-        android:alpha="0"
-        tools:alpha="1"
-        android:contentDescription="@string/card_view_avatar_content_description"
         app:layout_constraintBottom_toTopOf="@+id/ll_upload_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="spread">
+        tools:alpha="1">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/img_preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:contentDescription="@string/image_avatar_content_description"
             android:scaleType="centerCrop"
-            android:src="@drawable/placeholder"
-            android:contentDescription="@string/image_avatar_content_description"/>
+            android:src="@drawable/placeholder" />
     </androidx.cardview.widget.CardView>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -48,21 +47,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
-            android:text="@string/upload_from_camera"
             android:alpha="0"
-            tools:alpha="1"
+            android:contentDescription="@string/btn_camera_upload_content_description"
+            android:text="@string/upload_from_camera"
             android:textAllCaps="false"
-            android:contentDescription="@string/btn_camera_upload_content_description"/>
+            tools:alpha="1" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_upload_from_gallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/upload_from_gallery"
             android:alpha="0"
-            tools:alpha="1"
+            android:contentDescription="@string/btn_gallery_upload_content_description"
+            android:text="@string/upload_from_gallery"
             android:textAllCaps="false"
-            android:contentDescription="@string/btn_gallery_upload_content_description"/>
+            tools:alpha="1" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -71,44 +70,69 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginHorizontal="25dp"
+        android:alpha="0"
         android:background="@drawable/edit_text_bg"
         android:gravity="start"
-        android:alpha="0"
-        tools:alpha="1"
         android:hint="@string/et_description_post_content_description"
-        app:layout_constraintBottom_toTopOf="@+id/btn_post_story"
+        app:layout_constraintBottom_toTopOf="@+id/ll_include_location"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_upload_buttons"
-        />
+        tools:alpha="1" />
+
+    <LinearLayout
+        android:id="@+id/ll_include_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/btn_post_story"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_description">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/cb_include_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:text="@string/include_location"/>
+
+    </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_post_story"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="25dp"
-        android:text="@string/upload_button"
         android:alpha="0"
-        tools:alpha="1"
-        android:textAllCaps="false"
         android:contentDescription="@string/btn_upload_content_description"
+        android:text="@string/upload_button"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_description" />
+        app:layout_constraintTop_toBottomOf="@+id/ll_include_location"
+        tools:alpha="1" />
 
     <ProgressBar
         android:id="@+id/pb_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

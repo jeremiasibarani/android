@@ -8,7 +8,6 @@ import com.example.storyapp.datastore.AuthPreferences
 import com.example.storyapp.model.local.StoryDatabase
 import com.example.storyapp.model.local.StoryEntity
 import com.example.storyapp.model.network.*
-import com.example.storyapp.paging.StoriesPagingSource
 import com.example.storyapp.paging.StoriesRemoteMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +19,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import com.example.storyapp.util.Constants.LOCATION_REQUEST_FALSE
+import okhttp3.RequestBody
 
 
 class StoryRepository(
@@ -69,21 +69,28 @@ class StoryRepository(
         }
     }
 
-    fun addStory(description : String, file : File) : LiveData<NetworkResult<AddStoryResponse>> = liveData{
+    fun addStory(description : String, file : File, lat : Double?, lot : Double?) : LiveData<NetworkResult<AddStoryResponse>> = liveData{
         emit(NetworkResult.Loading)
-
-        val descriptionRequestBody = description.toRequestBody("text/plain".toMediaType())
+        val parts = mutableMapOf<String, RequestBody>()
         val requestImageFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
         val imageMultiPart : MultipartBody.Part = MultipartBody.Part.createFormData(
             "photo",
             file.name,
             requestImageFile
         )
+        val descriptionRequestBody = description.toRequestBody("text/plain".toMediaType())
+        parts["description"] = descriptionRequestBody
+        if(lat != null && lot != null){
+            val latRequestBody = lat.toString().toRequestBody("text/plain".toMediaType())
+            val lotRequestBody = lot.toString().toRequestBody("text/plain".toMediaType())
+            parts["lat"] = latRequestBody
+            parts["lon"] = lotRequestBody
+        }
 
         try{
             val response = storyApiService.addStory(
                 token = "Bearer $token",
-                description = descriptionRequestBody,
+                parts = parts,
                 file = imageMultiPart
             )
             val responseBody = response.body()
@@ -95,6 +102,7 @@ class StoryRepository(
 
         }catch (e : Exception){
             emit(NetworkResult.Error(e.message.toString()))
+            Log.e(TAG, e.message, e)
         }
     }
 

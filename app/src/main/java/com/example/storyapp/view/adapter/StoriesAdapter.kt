@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide
 import com.example.storyapp.R
 import com.example.storyapp.databinding.StoryItemBinding
 import com.example.storyapp.model.local.StoryEntity
-import com.example.storyapp.model.network.Story
 import com.example.storyapp.view.fragment.StoriesFragmentDirections
 
 class StoriesAdapter : PagingDataAdapter<StoryEntity, StoriesAdapter.ViewHolder>(StoryItemCallback) {
@@ -52,7 +51,7 @@ class StoriesAdapter : PagingDataAdapter<StoryEntity, StoriesAdapter.ViewHolder>
     }
 
     companion object{
-        private val StoryItemCallback = object : DiffUtil.ItemCallback<StoryEntity>(){
+        val StoryItemCallback = object : DiffUtil.ItemCallback<StoryEntity>(){
             override fun areItemsTheSame(oldItem: StoryEntity, newItem: StoryEntity): Boolean = oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: StoryEntity, newItem: StoryEntity): Boolean = oldItem == newItem

@@ -1,14 +1,16 @@
 package com.example.storyapp.view.activity
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.Resources
+import android.location.Geocoder
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.example.storyapp.R
 import com.example.storyapp.databinding.ActivityMapsBinding
-import com.example.storyapp.model.network.GetAllStoriesResponse
 import com.example.storyapp.model.network.Story
 import com.example.storyapp.repository.NetworkResult
 import com.example.storyapp.viewmodel.MapsViewModel
@@ -19,7 +21,10 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import java.io.IOException
+import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -38,6 +43,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        supportActionBar?.hide()
 
         viewModel.getStories().observe(this@MapsActivity){networkResult ->
             when(networkResult){
@@ -63,13 +70,39 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(
-            MarkerOptions()
-                .position(sydney)
-                .title("Sydney")
-        )
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        mMap.uiSettings.apply {
+            isZoomControlsEnabled = true
+            isCompassEnabled = true
+            isMapToolbarEnabled = true
+        }
+        setupMapStyle()
+
+    }
+
+    private fun setupMapStyle(){
+        try{
+            val success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this@MapsActivity, R.raw.map_style))
+            if(!success){
+                Log.e(TAG, "Style parsing failed")
+            }
+        }catch (e : Resources.NotFoundException){
+            Log.e(TAG, e.message, e)
+        }
+    }
+
+    private fun getAddressName(lat : Double, lon : Double) : String?{
+        var addressName : String? = null
+        val geocoder = Geocoder(this@MapsActivity, Locale.getDefault())
+        try {
+            @Suppress("DEPRECATION")
+            val list = geocoder.getFromLocation(lat, lon, 1)
+            if (list != null && list.size != 0) {
+                addressName = list[0].getAddressLine(0)
+            }
+        }catch (e : IOException){
+            Log.e(TAG, e.message, e)
+        }
+        return addressName
     }
 
     private fun showToast(context : Context, message : String){
@@ -82,10 +115,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun addMarkerFromStories(stories : List<Story>){
         stories.forEach {story ->
-            val latLng = LatLng(story.lat, story.long)
+            val latLng = LatLng(story.lat, story.lon)
+            val addressName = getAddressName(story.lat, story.lon)
             mMap.addMarker(
                 MarkerOptions()
                     .position(latLng)
+                    .title(story.name)
+                    .snippet(addressName)
             )
             boundsBuilder.include(latLng)
         }
@@ -100,4 +136,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             )
         )
     }
+
+    companion object{
+        private val TAG = MapsActivity::class.java.simpleName
+    }
+
 }

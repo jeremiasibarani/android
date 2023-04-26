@@ -54,7 +54,7 @@ class StoriesRemoteMediator(
                     photoUrl = story.photoUrl,
                     createdAt = story.createdAt,
                     latitude = story.lat,
-                    longitude = story.long
+                    longitude = story.lon
                 )
             } ?: emptyList()
 

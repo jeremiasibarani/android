@@ -36,5 +36,9 @@
     <string name="add_widget">Tambah widget</string>
     <string name="app_widget_description">Ini adalah deskripsi widget app</string>
     <string name="retry">Coba lagi</string>
+    <string name="permission_not_granted">Aksi tidak dapat dilakukan tanpa perizinan</string>
+    <string name="location_not_found">Lokasi tidak ditemukan</string>
+    <string name="include_location">Sertakan lokasi saat ini</string>
+    <string name="post_description_or_image_empty">Silahkan isi deskripsi atau pilih gambar dahulu</string>
 
 </resources>

@@ -3,21 +3,25 @@ package com.example.storyapp.view.fragment
 import android.Manifest
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_GET_CONTENT
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.Settings
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
@@ -27,9 +31,12 @@ import com.example.storyapp.databinding.FragmentAddStoryBinding
 import com.example.storyapp.repository.NetworkResult
 import com.example.storyapp.util.createTempImageFile
 import com.example.storyapp.util.reduceFileImage
+import com.example.storyapp.util.rotateBitmap
 import com.example.storyapp.util.uriToFile
 import com.example.storyapp.viewmodel.StoryViewModel
 import com.example.storyapp.viewmodel.ViewModelFactory
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import java.io.File
 
 class AddStoryFragment : Fragment() {
@@ -39,6 +46,26 @@ class AddStoryFragment : Fragment() {
     private lateinit var currentPhotoPath : String
     private val sharedViewModel : StoryViewModel by activityViewModels{
         ViewModelFactory.getInstance(requireContext())
+    }
+    private lateinit var fusedLocationClient : FusedLocationProviderClient
+    private var lat : Double? = null
+    private var long : Double? = null
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ){permissions ->
+        if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true) {
+            getMyLastLocation()
+        }
+        else if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+            getMyLastLocation()
+        }
+        else if(permissions[Manifest.permission.CAMERA] == true) {
+            startTakePhoto()
+        }
+        else{
+            showToast(requireContext(), resources.getString(R.string.permission_not_granted))
+        }
     }
 
     private val launcherIntentCamera = registerForActivityResult(
@@ -70,26 +97,29 @@ class AddStoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         viewBinding =  FragmentAddStoryBinding.inflate(inflater, container, false)
 
-        viewBinding.btnUploadFromCamera.setOnClickListener {
-            if(!allPermissionsGranted()){
-                ActivityCompat.requestPermissions(
-                    requireActivity(),
-                    REQUIRED_PERMISSIONS,
-                    REQUEST_CODE_PERMISSIONS
-                )
-            }else{
+        viewBinding.apply {
+            btnUploadFromCamera.setOnClickListener {
                 startTakePhoto()
             }
-        }
 
-        viewBinding.btnUploadFromGallery.setOnClickListener {
-            startGallery()
-        }
+            btnUploadFromGallery.setOnClickListener {
+                startGallery()
+            }
 
-        viewBinding.btnPostStory.setOnClickListener {
-            uploadStory()
+            btnPostStory.setOnClickListener {
+                uploadStory()
+            }
+            cbIncludeLocation.setOnCheckedChangeListener{_, isChecked ->
+                if(isChecked){
+                    getMyLastLocation()
+                }else{
+                    lat = null
+                    long = null
+                }
+            }
         }
 
         playAnimation()
@@ -97,39 +127,57 @@ class AddStoryFragment : Fragment() {
         return viewBinding.root
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == REQUEST_CODE_PERMISSIONS){
-            if(!allPermissionsGranted()){
-                Toast.makeText(requireActivity(), resources.getString(R.string.camera_permission_denied), Toast.LENGTH_SHORT).show()
+    @SuppressLint("MissingPermission")
+    private fun getMyLastLocation(){
+        if(checkPermissions(LOCATION_PERMISSIONS)){
+            if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q){
+                val locationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                    startActivity(intent)
+                }
             }
+            fusedLocationClient.lastLocation.addOnSuccessListener {location ->
+                if(location != null){
+                    lat = location.latitude
+                    long = location.longitude
+                }else{
+                    viewBinding.cbIncludeLocation.isChecked = false
+                    showToast(requireActivity(), resources.getString(R.string.location_not_found))
+                }
+            }
+        }else{
+            requestPermissionLauncher.launch(LOCATION_PERMISSIONS)
         }
     }
 
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all{
-        ContextCompat.checkSelfPermission(requireContext(), it) == PackageManager.PERMISSION_GRANTED
+    private fun showToast(context : Context, message : String){
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun checkPermissions(permissions : Array<String>) : Boolean = permissions.all{permission ->
+        ContextCompat.checkSelfPermission(
+            requireContext(),
+            permission
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     private fun uploadStory(){
         val description = viewBinding.etDescription.text.toString()
         if(getFile != null && description.isNotEmpty()){
             val uploadedFile : File = reduceFileImage(getFile!!)
-            sharedViewModel.postStory(description, uploadedFile).observe(viewLifecycleOwner){ networkResult ->
+            sharedViewModel.postStory(description, uploadedFile, lat, long).observe(viewLifecycleOwner){ networkResult ->
                 when(networkResult){
                     is NetworkResult.Loading -> showLoading(true)
                     is NetworkResult.Error -> {
                         showLoading(false)
-                        Toast.makeText(requireActivity(), networkResult.message, Toast.LENGTH_SHORT).show()
+                        showToast(requireActivity(), networkResult.message)
                     }
                     is NetworkResult.Success -> {
                         showLoading(false)
                         networkResult.data.apply {
                             if(!error){
-                                Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show()
+                                showToast(requireActivity(), message)
                                 viewBinding.root.findNavController()
                                     .navigate(R.id.action_addStoryFragment_to_storiesFragment)
                             }
@@ -138,8 +186,9 @@ class AddStoryFragment : Fragment() {
                 }
             }
         }else{
-            Toast.makeText(requireActivity(), "Silahkan isi deskripsi atau pilih gambar dahulu", Toast.LENGTH_SHORT).show()
+            showToast(requireActivity(), resources.getString(R.string.post_description_or_image_empty))
         }
+
     }
 
     private fun playAnimation(){
@@ -169,18 +218,22 @@ class AddStoryFragment : Fragment() {
     }
 
     private fun startTakePhoto(){
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.resolveActivity(requireActivity().packageManager)
-        val file = createTempImageFile(requireActivity())
-        val photoURI : Uri = FileProvider.getUriForFile(
-            requireActivity(),
-            "com.example.storyapp",
-            file
-        )
+        if(checkPermissions(CAMERA_PERMISSIONS)){
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            intent.resolveActivity(requireActivity().packageManager)
+            val file = createTempImageFile(requireActivity())
+            val photoURI : Uri = FileProvider.getUriForFile(
+                requireActivity(),
+                "com.example.storyapp",
+                file
+            )
 
-        currentPhotoPath = file.absolutePath
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-        launcherIntentCamera.launch(intent)
+            currentPhotoPath = file.absolutePath
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+            launcherIntentCamera.launch(intent)
+        }else{
+            requestPermissionLauncher.launch(CAMERA_PERMISSIONS)
+        }
     }
 
     private fun showLoading(isLoading : Boolean){
@@ -188,8 +241,13 @@ class AddStoryFragment : Fragment() {
     }
 
     companion object{
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
-        private const val REQUEST_CODE_PERMISSIONS = 10
+        private val CAMERA_PERMISSIONS = arrayOf(
+            Manifest.permission.CAMERA
+        )
+        private val LOCATION_PERMISSIONS = arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
     }
 
 }

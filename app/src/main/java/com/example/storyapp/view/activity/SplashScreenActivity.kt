@@ -30,7 +30,7 @@ class SplashScreenActivity : AppCompatActivity() {
             delay(1500L)
             viewModel.getToken().observe(this@SplashScreenActivity){ token ->
                 if(token.isEmpty()){
-                    val intent = Intent(this@SplashScreenActivity, MainActivity::class.java)
+                    val intent = Intent(this@SplashScreenActivity, AuthenticationActivity::class.java)
                     startActivity(intent)
                     finish()
                 }else{
